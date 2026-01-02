@@ -7,15 +7,17 @@ import { formatDate, formatDateTime } from '@/lib/date-utils'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { LoadingSkeleton } from '@/components/ui/loading-skeleton'
 import { ErrorMessage } from '@/components/ui/error-message'
+import { DeleteConfirmationDialog } from '@/components/ui/delete-confirmation-dialog'
+import { api, ApiException } from '@/lib/api'
 
 interface Subscription {
   id: string
   name: string
   price: number
   currency: string
-  frequency: 'monthly' | 'yearly'
-  renewalDate: string
-  status: 'active' | 'expired' | 'pending' | 'inactive'
+  frequency: 'daily' | 'weekly' | 'monthly' | 'yearly'
+  renewalDate?: string | null
+  status: 'active' | 'expired' | 'pending' | 'inactive' | 'cancelled'
   category?: string
   paymentMethod?: string
   startDate?: string
@@ -28,8 +30,10 @@ interface SubscriptionDetailsProps {
 
 export default function SubscriptionDetails({ subscription }: SubscriptionDetailsProps) {
   const router = useRouter()
-  const [loading] = useState(false)
-  const [error] = useState<Error | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   if (loading) {
     return (
@@ -54,12 +58,37 @@ export default function SubscriptionDetails({ subscription }: SubscriptionDetail
   }
 
   // Calculate next reminder dates (7, 5, 2, 1 days before renewal)
-  const renewalDate = new Date(subscription.renewalDate)
-  const reminderDates = [7, 5, 2, 1].map((days) => {
-    const date = new Date(renewalDate)
-    date.setDate(date.getDate() - days)
-    return { days, date }
-  }).filter(({ date }) => date > new Date())
+  const renewalDate = subscription.renewalDate ? new Date(subscription.renewalDate) : null
+  const reminderDates = renewalDate && !isNaN(renewalDate.getTime())
+    ? [7, 5, 2, 1].map((days) => {
+        const date = new Date(renewalDate)
+        date.setDate(date.getDate() - days)
+        return { days, date }
+      }).filter(({ date }) => date > new Date())
+    : []
+
+  async function handleDelete() {
+    setDeleting(true)
+    setError(null)
+
+    try {
+      // Backend endpoint: DELETE /api/v1/subscription/:id
+      await api.delete(`/api/v1/subscription/${subscription.id}`)
+      router.push('/subscriptions')
+      router.refresh()
+    } catch (err) {
+      let errorMessage = 'Failed to delete subscription'
+      if (err instanceof ApiException) {
+        errorMessage = err.message
+      } else if (err instanceof Error) {
+        errorMessage = err.message
+      }
+      setError(new Error(errorMessage))
+      setShowDeleteDialog(false)
+    } finally {
+      setDeleting(false)
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -80,12 +109,33 @@ export default function SubscriptionDetails({ subscription }: SubscriptionDetail
             </h1>
             <StatusBadge status={subscription.status} />
           </div>
-          <Link
-            href="/subscriptions"
-            className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
-          >
-            View All
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href={`/subscriptions/${subscription.id}/edit`}
+              className="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Edit
+            </Link>
+            <button
+              onClick={() => setShowDeleteDialog(true)}
+              disabled={loading || deleting}
+              className="inline-flex items-center px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-md hover:bg-red-100 dark:hover:bg-red-900/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Delete
+            </button>
+            <Link
+              href="/subscriptions"
+              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+            >
+              View All
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -195,6 +245,16 @@ export default function SubscriptionDetails({ subscription }: SubscriptionDetail
           )}
         </div>
       </div>
+
+      <DeleteConfirmationDialog
+        isOpen={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
+        onConfirm={handleDelete}
+        title="Delete Subscription"
+        message="Are you sure you want to delete this subscription? This action cannot be undone."
+        itemName={subscription.name}
+        loading={deleting}
+      />
     </div>
   )
 }

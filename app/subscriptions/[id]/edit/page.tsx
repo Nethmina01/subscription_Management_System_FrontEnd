@@ -1,7 +1,7 @@
 import { requireAuth } from '@/lib/auth'
 import { ErrorBoundary } from '@/components/ui/error-boundary'
-import SubscriptionDetails from '@/components/subscription-details'
-import { redirect, notFound } from 'next/navigation'
+import EditSubscriptionForm from '@/components/edit-subscription-form'
+import { redirect } from 'next/navigation'
 
 async function getSubscription(id: string, userId: string) {
   const { cookies } = await import('next/headers')
@@ -12,8 +12,7 @@ async function getSubscription(id: string, userId: string) {
     redirect('/login')
   }
 
-  // Backend doesn't implement GET /api/v1/subscription/:id yet
-  // Workaround: Get all user subscriptions and find the one with matching ID
+  // Get all user subscriptions and find the one with matching ID
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5500'}/api/v1/subscription/user/${userId}`,
     {
@@ -29,35 +28,31 @@ async function getSubscription(id: string, userId: string) {
     if (res.status === 401) {
       redirect('/login')
     }
-    // Better error message
-    const errorText = await res.text().catch(() => 'Unknown error')
-    throw new Error(`Failed to fetch subscriptions: ${errorText}`)
+    throw new Error('Failed to fetch subscription')
   }
 
   const json = await res.json()
-  // Backend returns { success, data: subscriptions }
   const subscriptions = json.data || []
   
   // Normalize subscription data and find the matching one
   const normalizedSubscriptions = subscriptions.map((sub: any) => ({
     ...sub,
     id: sub._id || sub.id,
-    renewalDate: sub.renewaltDate || sub.renewalDate, // Handle backend typo
+    renewalDate: sub.renewaltDate || sub.renewalDate,
   }))
   
-  // Find the subscription with matching ID
   const subscription = normalizedSubscriptions.find(
     (sub: any) => sub.id === id || sub._id === id
   )
 
   if (!subscription) {
-    notFound()
+    redirect('/subscriptions')
   }
 
   return subscription
 }
 
-export default async function SubscriptionDetailsPage({
+export default async function EditSubscriptionPage({
   params,
 }: {
   params: { id: string }
@@ -67,7 +62,7 @@ export default async function SubscriptionDetailsPage({
 
   return (
     <ErrorBoundary>
-      <SubscriptionDetails subscription={subscription} />
+      <EditSubscriptionForm subscription={subscription} />
     </ErrorBoundary>
   )
 }

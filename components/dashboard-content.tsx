@@ -13,10 +13,12 @@ interface Subscription {
   name: string
   price: number
   currency: string
-  frequency: 'monthly' | 'yearly'
-  renewalDate: string
-  status: 'active' | 'expired' | 'pending' | 'inactive'
+  frequency: 'daily' | 'weekly' | 'monthly' | 'yearly'
+  renewalDate?: string | null
+  status: 'active' | 'expired' | 'pending' | 'inactive' | 'cancelled'
   category?: string
+  paymentMethod?: string
+  startDate?: string
 }
 
 interface DashboardContentProps {
@@ -42,14 +44,110 @@ export default function DashboardContent({ subscriptions }: DashboardContentProp
   const activeSubscriptions = subscriptions.filter((s) => s.status === 'active')
   const totalSubscriptions = subscriptions.length
 
+  // Helper function to calculate renewal date if missing (backend has bug in pre-save hook)
+  function getRenewalDate(sub: Subscription): Date | null {
+    // First try to get existing renewal date
+    const renewalDateStr = sub.renewalDate || (sub as any).renewaltDate
+    if (renewalDateStr) {
+      const date = new Date(renewalDateStr)
+      if (!isNaN(date.getTime())) {
+        return date
+      }
+    }
+    
+    // If no renewal date, calculate it from startDate and frequency
+    const startDateStr = sub.startDate || (sub as any).startDate
+    if (startDateStr && sub.frequency) {
+      const startDate = new Date(startDateStr)
+      if (!isNaN(startDate.getTime())) {
+        const renewalDate = new Date(startDate)
+        const renewalPeriods: Record<string, number> = {
+          daily: 1,
+          weekly: 7,
+          monthly: 30,
+          yearly: 365,
+        }
+        const daysToAdd = renewalPeriods[sub.frequency] || 30
+        renewalDate.setDate(renewalDate.getDate() + daysToAdd)
+        return renewalDate
+      }
+    }
+    
+    return null
+  }
+
   // Calculate upcoming renewals (next 7 days)
   const now = new Date()
-  const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
+  now.setHours(0, 0, 0, 0) // Reset to start of day for accurate comparison
+  const sevenDaysFromNow = new Date(now)
+  sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7) // 7 days from today
+  sevenDaysFromNow.setHours(23, 59, 59, 999) // End of the 7th day
+  
   const upcomingRenewals = subscriptions.filter((s) => {
+    // Only show active subscriptions
     if (s.status !== 'active') return false
-    const renewalDate = new Date(s.renewalDate)
-    return renewalDate >= now && renewalDate <= sevenDaysFromNow
+    
+    // Get renewal date (calculate if missing)
+    const renewalDate = getRenewalDate(s)
+    if (!renewalDate) {
+      return false
+    }
+    
+    try {
+      // Check if renewal date is today or within the next 7 days
+      // Compare timestamps for accurate comparison
+      const renewalTimestamp = renewalDate.getTime()
+      const nowTimestamp = now.getTime()
+      const sevenDaysTimestamp = sevenDaysFromNow.getTime()
+      
+      return renewalTimestamp >= nowTimestamp && renewalTimestamp <= sevenDaysTimestamp
+    } catch (error) {
+      console.warn('Error processing renewal date for subscription:', s.id, s.name, error)
+      return false
+    }
   })
+  
+  // Sort by renewal date (soonest first)
+  upcomingRenewals.sort((a, b) => {
+    const dateA = getRenewalDate(a)
+    const dateB = getRenewalDate(b)
+    if (!dateA || !dateB) return 0
+    return dateA.getTime() - dateB.getTime()
+  })
+  
+  // Add calculated renewal dates to subscriptions for display
+  const subscriptionsWithRenewalDates = subscriptions.map((sub) => {
+    const calculatedRenewalDate = getRenewalDate(sub)
+    return {
+      ...sub,
+      renewalDate: sub.renewalDate || (sub as any).renewaltDate || (calculatedRenewalDate?.toISOString()),
+    }
+  })
+
+  // Calculate total monthly cost (convert yearly to monthly)
+  const totalMonthlyCost = subscriptions
+    .filter((s) => s.status === 'active')
+    .reduce((total, sub) => {
+      let monthlyPrice = sub.price
+      if (sub.frequency === 'yearly') {
+        monthlyPrice = sub.price / 12
+      } else if (sub.frequency === 'weekly') {
+        monthlyPrice = sub.price * 4.33 // Approximate weeks per month
+      } else if (sub.frequency === 'daily') {
+        monthlyPrice = sub.price * 30 // Approximate days per month
+      }
+      return total + monthlyPrice
+    }, 0)
+
+  // Group subscriptions by category
+  const subscriptionsByCategory = subscriptions.reduce((acc, sub) => {
+    const category = sub.category || 'Uncategorized'
+    if (!acc[category]) {
+      acc[category] = []
+    }
+    acc[category].push(sub)
+    return acc
+  }, {} as Record<string, Subscription[]>)
 
   if (subscriptions.length === 0) {
     return (
@@ -156,30 +254,163 @@ export default function DashboardContent({ subscriptions }: DashboardContentProp
         </div>
       </div>
 
+      {/* Total Monthly Cost Card */}
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 shadow-sm mb-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              Total Monthly Cost
+            </p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-2">
+              {subscriptions.length > 0 ? subscriptions[0].currency : 'USD'} {totalMonthlyCost.toFixed(2)}
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              Based on active subscriptions
+            </p>
+          </div>
+          <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+            <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Subscriptions Table */}
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm mb-8">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            All Subscriptions
+          </h2>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+            <thead className="bg-gray-50 dark:bg-gray-800">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Category
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Price
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Frequency
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Renewal Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
+              {subscriptionsWithRenewalDates.map((subscription) => (
+                <tr
+                  key={subscription.id}
+                  onClick={() => router.push(`/subscriptions/${subscription.id}`)}
+                  className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      router.push(`/subscriptions/${subscription.id}`)
+                    }
+                  }}
+                >
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                      {subscription.name}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 capitalize">
+                      {subscription.category || 'Uncategorized'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                    {subscription.currency} {subscription.price}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 capitalize">
+                    {subscription.frequency}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    {subscription.renewalDate ? formatDate(subscription.renewalDate) : 'N/A'}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <StatusBadge status={subscription.status} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Upcoming Renewals Section */}
       {upcomingRenewals.length > 0 && (
         <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 shadow-sm mb-8">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
             Upcoming Renewals (Next 7 Days)
           </h2>
           <div className="space-y-3">
-            {upcomingRenewals.map((subscription) => (
+            {upcomingRenewals.map((subscription) => {
+              const renewalDate = getRenewalDate(subscription)
+              return (
+                <div
+                  key={subscription.id}
+                  className="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800"
+                >
+                  <div>
+                    <p className="font-medium text-gray-900 dark:text-gray-100">
+                      {subscription.name}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {subscription.category && (
+                        <span className="capitalize">{subscription.category} • </span>
+                      )}
+                      Renews on {renewalDate ? formatDate(renewalDate.toISOString()) : 'N/A'}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold text-gray-900 dark:text-gray-100">
+                      {subscription.currency} {subscription.price}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Category Breakdown */}
+      {Object.keys(subscriptionsByCategory).length > 0 && (
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            Subscriptions by Category
+          </h2>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {Object.entries(subscriptionsByCategory).map(([category, subs]) => (
               <div
-                key={subscription.id}
-                className="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800"
+                key={category}
+                className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
               >
-                <div>
-                  <p className="font-medium text-gray-900 dark:text-gray-100">
-                    {subscription.name}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Renews on {formatDate(subscription.renewalDate)}
-                  </p>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 capitalize">
+                    {category}
+                  </h3>
+                  <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">
+                    {subs.length}
+                  </span>
                 </div>
-                <div className="text-right">
-                  <p className="font-semibold text-gray-900 dark:text-gray-100">
-                    {subscription.currency} {subscription.price}
-                  </p>
-                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {subs.filter((s) => s.status === 'active').length} active
+                </p>
               </div>
             ))}
           </div>

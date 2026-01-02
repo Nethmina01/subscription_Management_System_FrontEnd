@@ -2,16 +2,22 @@
  * Format a date using Intl.DateTimeFormat
  */
 export function formatDate(
-  date: string | Date,
+  date: string | Date | undefined | null,
   options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
   }
 ): string {
+  // Handle undefined/null values
+  if (!date) {
+    return 'N/A'
+  }
+  
   const dateObj = typeof date === 'string' ? new Date(date) : date
   
-  if (isNaN(dateObj.getTime())) {
+  // Check if dateObj is valid
+  if (!(dateObj instanceof Date) || isNaN(dateObj.getTime())) {
     return 'Invalid Date'
   }
 
@@ -22,7 +28,7 @@ export function formatDate(
  * Format a date with time
  */
 export function formatDateTime(
-  date: string | Date,
+  date: string | Date | undefined | null,
   options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'short',
@@ -37,10 +43,16 @@ export function formatDateTime(
 /**
  * Format a date as relative time (e.g., "2 days ago")
  */
-export function formatRelativeTime(date: string | Date): string {
+export function formatRelativeTime(date: string | Date | undefined | null): string {
+  // Handle undefined/null values
+  if (!date) {
+    return 'N/A'
+  }
+  
   const dateObj = typeof date === 'string' ? new Date(date) : date
   
-  if (isNaN(dateObj.getTime())) {
+  // Check if dateObj is valid
+  if (!(dateObj instanceof Date) || isNaN(dateObj.getTime())) {
     return 'Invalid Date'
   }
 

@@ -2,14 +2,14 @@
 
 import { cn } from '@/lib/utils'
 
-export type Status = 'active' | 'expired' | 'pending' | 'inactive'
+export type Status = 'active' | 'expired' | 'pending' | 'inactive' | 'cancelled'
 
 interface StatusBadgeProps {
-  status: Status
+  status: Status | string | undefined
   className?: string
 }
 
-const statusConfig: Record<Status, { label: string; className: string }> = {
+const statusConfig: Record<string, { label: string; className: string }> = {
   active: {
     label: 'Active',
     className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
@@ -26,10 +26,16 @@ const statusConfig: Record<Status, { label: string; className: string }> = {
     label: 'Inactive',
     className: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
   },
+  cancelled: {
+    label: 'Cancelled',
+    className: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
+  },
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
-  const config = statusConfig[status]
+  // Handle undefined or unknown status values
+  const normalizedStatus = status || 'inactive'
+  const config = statusConfig[normalizedStatus] || statusConfig.inactive
 
   return (
     <span

@@ -7,6 +7,8 @@ import { formatDate } from '@/lib/date-utils'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { TableSkeleton } from '@/components/ui/loading-skeleton'
+import { DeleteConfirmationDialog } from '@/components/ui/delete-confirmation-dialog'
+import { api, ApiException } from '@/lib/api'
 
 interface Subscription {
   id: string
@@ -26,6 +28,31 @@ interface SubscriptionsListProps {
 export default function SubscriptionsList({ subscriptions }: SubscriptionsListProps) {
   const router = useRouter()
   const [loading] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<Subscription | null>(null)
+  const [deleting, setDeleting] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+
+  async function handleDelete(subscription: Subscription) {
+    setDeleting(true)
+    setError(null)
+
+    try {
+      // Backend endpoint: DELETE /api/v1/subscription/:id
+      await api.delete(`/api/v1/subscription/${subscription.id}`)
+      router.refresh()
+      setDeleteTarget(null)
+    } catch (err) {
+      let errorMessage = 'Failed to delete subscription'
+      if (err instanceof ApiException) {
+        errorMessage = err.message
+      } else if (err instanceof Error) {
+        errorMessage = err.message
+      }
+      setError(new Error(errorMessage))
+    } finally {
+      setDeleting(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -118,6 +145,12 @@ export default function SubscriptionsList({ subscriptions }: SubscriptionsListPr
                 >
                   Status
                 </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
@@ -157,12 +190,57 @@ export default function SubscriptionsList({ subscriptions }: SubscriptionsListPr
                   <td className="px-6 py-4 whitespace-nowrap">
                     <StatusBadge status={subscription.status} />
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/subscriptions/${subscription.id}/edit`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+                        title="Edit subscription"
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </Link>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setDeleteTarget(subscription)
+                        }}
+                        className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 rounded disabled:opacity-50"
+                        title="Delete subscription"
+                        disabled={deleting}
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
+
+      {error && (
+        <div className="mt-4">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <p className="text-sm text-red-800 dark:text-red-300">{error.message}</p>
+          </div>
+        </div>
+      )}
+
+      <DeleteConfirmationDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
+        title="Delete Subscription"
+        message="Are you sure you want to delete this subscription? This action cannot be undone."
+        itemName={deleteTarget?.name}
+        loading={deleting}
+      />
     </div>
   )
 }

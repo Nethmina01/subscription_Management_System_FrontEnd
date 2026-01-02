@@ -42,7 +42,20 @@ export default function SignUpPage() {
     }
 
     try {
-      await api.post('/api/v1/auth/sign-up', { name, email, password })
+      // 🔥 BACKEND RETURNS: { success, data: { token, user } }
+      const response = await api.post<any>('/api/v1/auth/sign-up', { name, email, password })
+
+      // 🔥 STORE TOKEN (BACKEND-ALIGNED)
+      const token = response.data?.token
+      if (!token) {
+        throw new Error('Authentication token missing')
+      }
+
+      // Store token in localStorage for client-side requests
+      localStorage.setItem('token', token)
+      
+      // Store token in cookie for server-side requests
+      document.cookie = `token=${token}; path=/; max-age=86400; SameSite=Lax`
       router.push('/dashboard')
       router.refresh()
     } catch (err) {

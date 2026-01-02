@@ -10,11 +10,17 @@ export default function LogoutPage() {
   useEffect(() => {
     async function logout() {
       try {
-        await api.post('/api/v1/auth/logout', {})
+        // Backend doesn't have logout endpoint, so we just clear local storage and cookies
+        // If backend adds logout endpoint later, we can call it here
+        // await api.post('/api/v1/auth/logout', {})
       } catch (error) {
         // Continue with logout even if API call fails
         console.error('Logout error:', error)
       } finally {
+        // Clear token from localStorage
+        localStorage.removeItem('token')
+        // Clear token cookie
+        document.cookie = 'token=; path=/; max-age=0; SameSite=Lax'
         router.push('/login')
         router.refresh()
       }
