@@ -218,6 +218,7 @@ The application follows modern SaaS design principles with focus on:
 ### Color System
 
 **Light Theme**:
+
 - Primary Background: `#ffffff`
 - Secondary Background: `#f9fafb`
 - Primary Text: `#000000` (high visibility)
@@ -225,6 +226,7 @@ The application follows modern SaaS design principles with focus on:
 - Borders: `#e5e7eb`
 
 **Dark Theme**:
+
 - Primary Background: `#111827`
 - Secondary Background: `#1f2937`
 - Primary Text: `#f9fafb`
@@ -275,13 +277,16 @@ The application uses **JWT (JSON Web Tokens)** for authentication:
 ### Main API Endpoints
 
 **Authentication**:
+
 - `POST /api/v1/auth/sign-up` - User registration
 - `POST /api/v1/auth/sign-in` - User login
 
 **User Management**:
+
 - `GET /api/v1/user/me` - Get current authenticated user
 
 **Subscription Management**:
+
 - `GET /api/v1/subscription/user/:userId` - Get all user subscriptions
 - `POST /api/v1/subscription` - Create new subscription
 - `PUT /api/v1/subscription/:id` - Update subscription
@@ -290,6 +295,7 @@ The application uses **JWT (JSON Web Tokens)** for authentication:
 ### Data Normalization
 
 The frontend handles backend data inconsistencies:
+
 - ID mapping: Converts MongoDB `_id` to `id` for consistency
 - Typo handling: Normalizes `renewaltDate` to `renewalDate`
 - Date formatting: Converts ISO date strings to user-friendly formats
@@ -429,6 +435,7 @@ All components are designed mobile-first, then enhanced for larger screens:
 ### Error Boundaries
 
 React Error Boundaries catch component errors:
+
 - Global error boundary catches errors in page components
 - Component-level boundaries for specific error handling
 
@@ -520,7 +527,7 @@ When contributing to this project:
 For issues or questions, please refer to the project documentation or contact:
 
 - **Email**: nethminaappdevelopment1@gmail.com
-- **LinkedIn**: [http://www.linkedin.com/in/neth-band](http://www.linkedin.com/in/neth-band)
+- **LinkedIn**: [http://www.linkedin.com/in/neth-band]
 
 ---
 
