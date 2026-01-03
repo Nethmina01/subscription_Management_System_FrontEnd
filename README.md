@@ -831,7 +831,9 @@ When contributing to this project:
 
 ## 📞 Support
 
-For issues or questions, please refer to the project documentation or contact the developer Email: nethminaappdevelopment1@gmail.com
+For issues or questions, please refer to the project documentation or contact the developer
+
+Email: nethminaappdevelopment1@gmail.com
 
 LinkedIn: http://www.linkedin.com/in/neth-band
 
