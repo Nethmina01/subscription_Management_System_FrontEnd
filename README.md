@@ -60,13 +60,13 @@ The application follows modern web development best practices, including server-
 
 ### 📦 Subscription Management
 
-- **Create Subscriptions**: 
+- **Create Subscriptions**:
   - Name, price, currency (Rs/USD)
   - Billing frequency (daily, weekly, monthly, yearly)
   - Category selection
   - Payment method
   - Start date
-- **View Subscriptions**: 
+- **View Subscriptions**:
   - List view with sorting and filtering
   - Detailed view with all subscription information
   - Renewal date calculations
@@ -94,6 +94,7 @@ The application follows modern web development best practices, including server-
 ### Core Framework
 
 - **Next.js 14.0.4**: React framework with App Router
+
   - Server-side rendering (SSR)
   - Server Components for data fetching
   - Client Components for interactivity
@@ -101,6 +102,7 @@ The application follows modern web development best practices, including server-
   - Built-in optimizations
 
 - **React 18.2.0**: UI library
+
   - Hooks for state management
   - Component composition
   - Context API for theme management
@@ -113,6 +115,7 @@ The application follows modern web development best practices, including server-
 ### Styling
 
 - **Tailwind CSS 3.4.0**: Utility-first CSS framework
+
   - Responsive design utilities
   - Dark mode support (class-based)
   - Custom color palette
@@ -145,22 +148,26 @@ The application follows modern web development best practices, including server-
 ### Installation
 
 1. **Clone the repository** (if applicable) or navigate to the frontend directory:
+
    ```bash
    cd frontEnd
    ```
 
 2. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 3. **Configure environment variables** (optional):
    Create a `.env.local` file in the root directory:
+
    ```env
    NEXT_PUBLIC_API_URL=http://localhost:5500
    ```
 
 4. **Start the development server**:
+
    ```bash
    npm run dev
    ```
@@ -254,6 +261,7 @@ The application follows modern SaaS design principles with a focus on:
 ### Color System
 
 #### Light Theme
+
 - **Primary Background**: `#ffffff` (Pure white)
 - **Secondary Background**: `#f9fafb` (Light gray)
 - **Primary Text**: `#000000` (Pure black for high visibility)
@@ -262,6 +270,7 @@ The application follows modern SaaS design principles with a focus on:
 - **Accent Colors**: Blue (`#2563eb`) for primary actions
 
 #### Dark Theme
+
 - **Primary Background**: `#111827` (Dark gray)
 - **Secondary Background**: `#1f2937` (Medium dark gray)
 - **Primary Text**: `#f9fafb` (Light gray/white)
@@ -306,19 +315,21 @@ The application follows modern SaaS design principles with a focus on:
 The frontend connects to a Node.js/Express backend API. Configuration is managed in `lib/api.ts`:
 
 ```typescript
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5500'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5500";
 ```
 
 ### Authentication Method
 
 The application uses **JWT (JSON Web Tokens)** for authentication:
 
-1. **Token Storage**: 
+1. **Token Storage**:
+
    - `localStorage` for client-side components
    - Cookies for server-side components
    - Both are synchronized for compatibility
 
 2. **Token Transmission**:
+
    - Sent as `Authorization: Bearer <token>` header
    - Automatically included in all API requests via `apiRequest` function
 
@@ -332,6 +343,7 @@ The application uses **JWT (JSON Web Tokens)** for authentication:
 #### Authentication
 
 - **POST** `/api/v1/auth/sign-up`
+
   - **Request Body**: `{ name: string, email: string, password: string }`
   - **Response**: `{ success: boolean, data: { token: string, user: User } }`
   - **Usage**: User registration
@@ -351,13 +363,15 @@ The application uses **JWT (JSON Web Tokens)** for authentication:
 #### Subscription Management
 
 - **GET** `/api/v1/subscription/user/:userId`
+
   - **Headers**: `Authorization: Bearer <token>`
   - **Response**: `{ success: boolean, data: Subscription[] }`
   - **Usage**: Get all subscriptions for a user
 
 - **POST** `/api/v1/subscription`
+
   - **Headers**: `Authorization: Bearer <token>`
-  - **Request Body**: 
+  - **Request Body**:
     ```typescript
     {
       name: string
@@ -373,6 +387,7 @@ The application uses **JWT (JSON Web Tokens)** for authentication:
   - **Usage**: Create a new subscription
 
 - **PUT** `/api/v1/subscription/:id`
+
   - **Headers**: `Authorization: Bearer <token>`
   - **Request Body**: Same as POST
   - **Response**: `{ success: boolean, data: Subscription }`
@@ -412,12 +427,14 @@ The API client (`lib/api.ts`) provides comprehensive error handling:
 **Purpose**: React framework for production
 
 **Usage**:
+
 - App Router for file-based routing
 - Server Components for data fetching
 - Client Components for interactivity
 - Built-in optimizations (image, font, script)
 
 **Key Features Used**:
+
 - `next/navigation`: `useRouter`, `usePathname`, `redirect`, `notFound`
 - `next/headers`: `cookies` for server-side token access
 - `next/script`: `Script` component for theme initialization
@@ -428,12 +445,14 @@ The API client (`lib/api.ts`) provides comprehensive error handling:
 **Purpose**: UI library and DOM rendering
 
 **Usage**:
+
 - Component composition
 - Hooks for state management (`useState`, `useEffect`, `useContext`)
 - Context API for theme management
 - Error boundaries for error handling
 
 **Key Features Used**:
+
 - Server Components (default)
 - Client Components (`'use client'` directive)
 - React Hooks for state and side effects
@@ -444,12 +463,14 @@ The API client (`lib/api.ts`) provides comprehensive error handling:
 **Purpose**: Type safety and developer experience
 
 **Usage**:
+
 - Type definitions for all components and functions
 - Interface definitions for data structures
 - Type inference for better DX
 - Compile-time error checking
 
 **Key Features Used**:
+
 - Strict type checking
 - Interface definitions
 - Generic types for API responses
@@ -462,12 +483,14 @@ The API client (`lib/api.ts`) provides comprehensive error handling:
 **Purpose**: Utility-first CSS framework
 
 **Usage**:
+
 - Responsive design utilities
 - Dark mode support (class-based)
 - Custom color palette
 - Utility classes for rapid development
 
 **Configuration** (`tailwind.config.ts`):
+
 ```typescript
 {
   darkMode: 'class', // Class-based dark mode
@@ -484,6 +507,7 @@ The API client (`lib/api.ts`) provides comprehensive error handling:
 ```
 
 **Key Features Used**:
+
 - Responsive breakpoints (`sm:`, `md:`, `lg:`)
 - Dark mode variants (`dark:`)
 - Utility classes for spacing, colors, typography
@@ -494,6 +518,7 @@ The API client (`lib/api.ts`) provides comprehensive error handling:
 **Purpose**: CSS processing and transformation
 
 **Usage**:
+
 - Processes Tailwind CSS
 - Applies Autoprefixer
 - Optimizes CSS output
@@ -503,6 +528,7 @@ The API client (`lib/api.ts`) provides comprehensive error handling:
 **Purpose**: Automatic vendor prefixing
 
 **Usage**:
+
 - Adds browser-specific prefixes automatically
 - Ensures cross-browser compatibility
 
@@ -513,22 +539,20 @@ The API client (`lib/api.ts`) provides comprehensive error handling:
 **Purpose**: Conditional class name utility
 
 **Usage**:
+
 ```typescript
-import { clsx } from 'clsx'
+import { clsx } from "clsx";
 
 // Conditional classes
-clsx('base-class', condition && 'conditional-class')
+clsx("base-class", condition && "conditional-class");
 ```
 
 **Location**: Used in `lib/utils.ts` via `cn()` function
 
 **Example**:
+
 ```typescript
-cn(
-  'base-class',
-  isActive && 'active-class',
-  className
-)
+cn("base-class", isActive && "active-class", className);
 ```
 
 #### tailwind-merge (`^2.2.0`)
@@ -536,13 +560,15 @@ cn(
 **Purpose**: Intelligently merge Tailwind CSS classes
 
 **Usage**:
+
 - Prevents class conflicts
 - Merges conflicting Tailwind utilities
 - Used in combination with `clsx` in `cn()` utility
 
 **Example**:
+
 ```typescript
-cn('px-4 py-2', 'px-6') // Results in 'py-2 px-6' (px-4 is overridden)
+cn("px-4 py-2", "px-6"); // Results in 'py-2 px-6' (px-4 is overridden)
 ```
 
 ### Development Dependencies
@@ -610,11 +636,13 @@ cn('px-4 py-2', 'px-6') // Results in 'py-2 px-6' (px-4 is overridden)
 ### Server Components
 
 Server Components are used for:
+
 - Data fetching (dashboard, subscriptions list)
 - Authentication checks
 - Initial page rendering
 
 **Examples**:
+
 - `app/dashboard/page.tsx`
 - `app/subscriptions/page.tsx`
 - `app/profile/page.tsx`
@@ -622,11 +650,13 @@ Server Components are used for:
 ### Client Components
 
 Client Components are used for:
+
 - User interactions (forms, buttons)
 - State management
 - Browser APIs (localStorage, window)
 
 **Examples**:
+
 - `components/add-subscription-form.tsx`
 - `components/edit-subscription-form.tsx`
 - `components/navigation.tsx`
@@ -653,16 +683,16 @@ The API client provides a unified interface for backend communication:
 
 ```typescript
 // GET request
-const data = await api.get<ResponseType>('/endpoint')
+const data = await api.get<ResponseType>("/endpoint");
 
 // POST request
-const data = await api.post<ResponseType>('/endpoint', { ...payload })
+const data = await api.post<ResponseType>("/endpoint", { ...payload });
 
 // PUT request
-const data = await api.put<ResponseType>('/endpoint', { ...payload })
+const data = await api.put<ResponseType>("/endpoint", { ...payload });
 
 // DELETE request
-const data = await api.delete<ResponseType>('/endpoint')
+const data = await api.delete<ResponseType>("/endpoint");
 ```
 
 ### Features
@@ -676,11 +706,11 @@ const data = await api.delete<ResponseType>('/endpoint')
 
 ```typescript
 try {
-  const response = await api.post('/endpoint', data)
+  const response = await api.post("/endpoint", data);
 } catch (err) {
   if (err instanceof ApiException) {
     // Handle API error with status code
-    console.error(err.message, err.status)
+    console.error(err.message, err.status);
   }
 }
 ```
@@ -801,7 +831,9 @@ When contributing to this project:
 
 ## 📞 Support
 
-For issues or questions, please refer to the project documentation or contact the development team.
+For issues or questions, please refer to the project documentation or contact the developer Email: nethminaappdevelopment1@gmail.com
+
+LinkedIn: http://www.linkedin.com/in/neth-band
 
 ---
 
