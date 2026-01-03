@@ -1,10 +1,10 @@
-# 📱 Subscription Management System - Frontend
+# Subscription Management System - Frontend
 
-A modern, production-ready subscription management application built with Next.js 14, TypeScript, and Tailwind CSS. This frontend application provides a comprehensive interface for users to manage their subscriptions, track renewal dates, and monitor spending across different categories.
+A modern, production-ready subscription management application built with Next.js 14, TypeScript, and Tailwind CSS. This frontend provides a comprehensive interface for users to track subscriptions, monitor renewals, and analyze spending across different categories.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
@@ -13,21 +13,24 @@ A modern, production-ready subscription management application built with Next.j
 - [Project Structure](#project-structure)
 - [UI Design Principles](#ui-design-principles)
 - [Backend Connectivity](#backend-connectivity)
-- [Third-Party Libraries](#third-party-libraries)
 - [Authentication Flow](#authentication-flow)
 - [Component Architecture](#component-architecture)
 - [API Integration](#api-integration)
 - [Responsive Design](#responsive-design)
 - [Error Handling](#error-handling)
 - [Development Guidelines](#development-guidelines)
+- [Deployment](#deployment)
+- [License](#license)
+- [Contributing](#contributing)
+- [Support](#support)
 
 ---
 
-## 🎯 Overview
+## Overview
 
 This frontend application is a full-featured subscription management system that enables users to:
 
-- **Track Subscriptions**: Add, view, edit, and delete subscriptions
+- **Track Subscriptions**: Add, view, edit, and delete subscriptions with detailed information
 - **Monitor Renewals**: Get insights on upcoming renewals and expiration dates
 - **Analyze Spending**: View total monthly costs and category breakdowns
 - **Manage Account**: Update profile information and preferences
@@ -37,117 +40,78 @@ The application follows modern web development best practices, including server-
 
 ---
 
-## ✨ Features
+## Features
 
-### 🔐 Authentication & Authorization
+### Authentication & Authorization
 
-- **User Registration**: Create new accounts with email and password validation
-- **User Login**: Secure authentication with JWT tokens
-- **Session Management**: Token stored in both `localStorage` and cookies for client/server compatibility
-- **Protected Routes**: Server-side authentication guards for protected pages
-- **Auto-redirect**: Automatic redirection based on authentication status
+- User registration with email and password validation
+- Secure login with JWT token management
+- Session management via localStorage and cookies for client/server compatibility
+- Protected routes with server-side authentication guards
+- Automatic redirection based on authentication status
 
-### 📊 Dashboard
+### Dashboard
 
-- **Summary Cards**:
-  - Total Subscriptions count
-  - Active Subscriptions count
-  - Upcoming Renewals (next 7 days)
-  - Total Monthly Cost (normalized across all frequencies)
-- **Category Breakdown**: Visual representation of subscriptions by category
-- **Subscriptions Table**: Comprehensive table with all subscription details
-- **Quick Actions**: Direct links to add new subscriptions
+- Summary cards: Total subscriptions, active subscriptions, upcoming renewals (next 7 days)
+- Total monthly cost calculation (normalized across all billing frequencies)
+- Category breakdown visualization
+- Comprehensive subscriptions table with sorting and filtering
+- Quick actions to add new subscriptions
 
-### 📦 Subscription Management
+### Subscription Management
 
-- **Create Subscriptions**:
-  - Name, price, currency (Rs/USD)
-  - Billing frequency (daily, weekly, monthly, yearly)
-  - Category selection
-  - Payment method
-  - Start date
-- **View Subscriptions**:
-  - List view with sorting and filtering
-  - Detailed view with all subscription information
-  - Renewal date calculations
-  - Reminder date previews
-- **Edit Subscriptions**: Update any subscription field
-- **Delete Subscriptions**: Remove subscriptions with confirmation dialog
+- **Create**: Name, price, currency (Rs/USD), billing frequency (daily/weekly/monthly/yearly), category, payment method, start date
+- **View**: List and detail views with renewal date calculations and reminder previews
+- **Edit**: Update any subscription field
+- **Delete**: Remove subscriptions with confirmation dialog
 
-### 👤 User Profile
+### User Profile
 
-- **Account Information**: View name, email, and account creation date
-- **Settings Management**: Profile and notification preferences
-- **Logout Functionality**: Secure session termination
+- View account information (name, email, creation date)
+- Profile settings management
+- Secure logout functionality
 
-### 🎨 Theme System
+### Theme System
 
-- **Light/Dark Mode**: Toggle between light and dark themes
-- **Persistent Preferences**: Theme choice saved in localStorage
-- **System-Wide Application**: All UI components adapt to selected theme
-- **High Visibility**: Dark text in light mode for optimal readability
+- Light/dark mode toggle
+- Persistent theme preferences in localStorage
+- System-wide theme application
+- High visibility design for optimal readability
 
 ---
 
-## 🛠 Technology Stack
+## Technology Stack
 
 ### Core Framework
 
-- **Next.js 14.0.4**: React framework with App Router
-
-  - Server-side rendering (SSR)
-  - Server Components for data fetching
-  - Client Components for interactivity
-  - File-based routing
-  - Built-in optimizations
-
-- **React 18.2.0**: UI library
-
-  - Hooks for state management
-  - Component composition
-  - Context API for theme management
-
-- **TypeScript 5.3.3**: Type safety and developer experience
-  - Strict type checking
-  - Interface definitions
-  - Type inference
+- **Next.js 14.0.4**: React framework with App Router, SSR, Server Components, and built-in optimizations
+- **React 18.2.0**: UI library with hooks, component composition, and Context API
+- **TypeScript 5.3.3**: Type safety with strict type checking and interface definitions
 
 ### Styling
 
-- **Tailwind CSS 3.4.0**: Utility-first CSS framework
-
-  - Responsive design utilities
-  - Dark mode support (class-based)
-  - Custom color palette
-  - Utility classes for rapid development
-
-- **PostCSS 8.4.32**: CSS processing
+- **Tailwind CSS 3.4.0**: Utility-first CSS framework with responsive design, dark mode support, and custom color palette
+- **PostCSS 8.4.32**: CSS processing and transformation
 - **Autoprefixer 10.4.16**: Automatic vendor prefixing
 
-### Utility Libraries
+### Utilities
 
 - **clsx 2.0.0**: Conditional class name utility
-- **tailwind-merge 2.2.0**: Merge Tailwind classes intelligently
-
-### Development Tools
-
-- **@types/node 20.10.6**: TypeScript definitions for Node.js
-- **@types/react 18.2.46**: TypeScript definitions for React
-- **@types/react-dom 18.2.18**: TypeScript definitions for React DOM
+- **tailwind-merge 2.2.0**: Intelligent Tailwind class merging
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
-- **Node.js**: Version 18.0 or higher
-- **npm**: Version 9.0 or higher (or yarn/pnpm)
-- **Backend API**: Running on `http://localhost:5500` (or configure via environment variable)
+- Node.js 18.0 or higher
+- npm 9.0 or higher (or yarn/pnpm)
+- Backend API running on `http://localhost:5500` (or configure via environment variable)
 
 ### Installation
 
-1. **Clone the repository** (if applicable) or navigate to the frontend directory:
+1. **Navigate to the frontend directory**:
 
    ```bash
    cd frontEnd
@@ -160,6 +124,7 @@ The application follows modern web development best practices, including server-
    ```
 
 3. **Configure environment variables** (optional):
+
    Create a `.env.local` file in the root directory:
 
    ```env
@@ -173,6 +138,7 @@ The application follows modern web development best practices, including server-
    ```
 
 5. **Open your browser**:
+
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Build for Production
@@ -184,50 +150,41 @@ npm start
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 frontEnd/
 ├── app/                          # Next.js App Router pages
-│   ├── layout.tsx               # Root layout with navigation and theme provider
+│   ├── layout.tsx               # Root layout with navigation
 │   ├── page.tsx                 # Home page (redirects to dashboard)
 │   ├── globals.css              # Global styles and CSS variables
-│   ├── dashboard/
-│   │   └── page.tsx             # Dashboard page (server component)
-│   ├── login/
-│   │   └── page.tsx             # Login page (client component)
-│   ├── signup/
-│   │   └── page.tsx             # Registration page (client component)
-│   ├── logout/
-│   │   └── page.tsx             # Logout handler
-│   ├── profile/
-│   │   └── page.tsx             # User profile page
-│   ├── subscriptions/
-│   │   ├── page.tsx            # Subscriptions list page
-│   │   ├── new/
-│   │   │   └── page.tsx        # Add subscription page
-│   │   └── [id]/
-│   │       ├── page.tsx        # Subscription details page
-│   │       └── edit/
-│   │           └── page.tsx    # Edit subscription page
+│   ├── dashboard/               # Dashboard page
+│   ├── login/                   # Login page
+│   ├── signup/                  # Registration page
+│   ├── logout/                  # Logout handler
+│   ├── profile/                 # User profile page
+│   ├── subscriptions/           # Subscription management pages
+│   │   ├── page.tsx            # Subscriptions list
+│   │   ├── new/                # Add subscription
+│   │   └── [id]/               # Subscription details and edit
 │   ├── error.tsx                # Global error boundary
 │   ├── not-found.tsx            # 404 page
 │   └── loading.tsx              # Loading UI
 │
 ├── components/                   # React components
 │   ├── navigation.tsx           # Main navigation bar
-│   ├── dashboard-content.tsx    # Dashboard content component
-│   ├── subscriptions-list.tsx # Subscriptions table component
+│   ├── dashboard-content.tsx    # Dashboard content
+│   ├── subscriptions-list.tsx   # Subscriptions table
 │   ├── subscription-details.tsx # Subscription detail view
 │   ├── add-subscription-form.tsx # Create subscription form
 │   ├── edit-subscription-form.tsx # Edit subscription form
 │   ├── profile-content.tsx      # Profile page content
 │   └── ui/                      # Reusable UI components
-│       ├── error-boundary.tsx  # Error boundary component
+│       ├── error-boundary.tsx   # Error boundary component
 │       ├── error-message.tsx   # Error display component
 │       ├── empty-state.tsx     # Empty state component
 │       ├── loading-skeleton.tsx # Loading skeleton components
-│       ├── status-badge.tsx   # Status badge component
+│       ├── status-badge.tsx    # Status badge component
 │       └── delete-confirmation-dialog.tsx # Delete confirmation modal
 │
 ├── lib/                         # Utility libraries
@@ -246,13 +203,13 @@ frontEnd/
 
 ---
 
-## 🎨 UI Design Principles
+## UI Design Principles
 
 ### Design Philosophy
 
-The application follows modern SaaS design principles with a focus on:
+The application follows modern SaaS design principles with focus on:
 
-1. **Clarity**: Clean, uncluttered interfaces that prioritize information hierarchy
+1. **Clarity**: Clean, uncluttered interfaces with clear information hierarchy
 2. **Consistency**: Uniform design patterns across all pages and components
 3. **Accessibility**: WCAG-compliant components with proper ARIA labels and keyboard navigation
 4. **Responsiveness**: Mobile-first design that works seamlessly across all device sizes
@@ -260,43 +217,32 @@ The application follows modern SaaS design principles with a focus on:
 
 ### Color System
 
-#### Light Theme
+**Light Theme**:
+- Primary Background: `#ffffff`
+- Secondary Background: `#f9fafb`
+- Primary Text: `#000000` (high visibility)
+- Secondary Text: `#1f2937`
+- Borders: `#e5e7eb`
 
-- **Primary Background**: `#ffffff` (Pure white)
-- **Secondary Background**: `#f9fafb` (Light gray)
-- **Primary Text**: `#000000` (Pure black for high visibility)
-- **Secondary Text**: `#1f2937` (Dark gray)
-- **Borders**: `#e5e7eb` (Light gray)
-- **Accent Colors**: Blue (`#2563eb`) for primary actions
-
-#### Dark Theme
-
-- **Primary Background**: `#111827` (Dark gray)
-- **Secondary Background**: `#1f2937` (Medium dark gray)
-- **Primary Text**: `#f9fafb` (Light gray/white)
-- **Secondary Text**: `#d1d5db` (Medium light gray)
-- **Borders**: `#374151` (Dark gray)
-- **Accent Colors**: Blue (`#60a5fa`) for primary actions
+**Dark Theme**:
+- Primary Background: `#111827`
+- Secondary Background: `#1f2937`
+- Primary Text: `#f9fafb`
+- Secondary Text: `#d1d5db`
+- Borders: `#374151`
 
 ### Typography
 
 - **Font Family**: Inter (Google Fonts)
-- **Headings**: Bold, hierarchical sizing (h1: 3xl, h2: 2xl, h3: xl)
+- **Headings**: Semibold, hierarchical sizing with `tracking-tight`
 - **Body Text**: Regular weight, readable sizes (base: 16px, sm: 14px)
 - **Line Height**: Comfortable spacing for readability
-
-### Spacing System
-
-- **Container Padding**: Responsive (4px mobile → 8px desktop)
-- **Card Padding**: 16px (mobile) → 24px (tablet+)
-- **Component Gaps**: Consistent 16px/24px spacing
-- **Section Margins**: 32px-48px between major sections
 
 ### Component Patterns
 
 - **Cards**: Rounded corners (`rounded-lg`), subtle shadows, clear borders
-- **Buttons**: Clear hierarchy (primary: blue, secondary: gray, danger: red)
-- **Forms**: Consistent input styling, clear labels, helpful error messages
+- **Buttons**: Clear hierarchy with consistent styling and hover states
+- **Forms**: Consistent input styling with labels above inputs, inline validation
 - **Tables**: Alternating row colors, hover states, clickable rows
 - **Badges**: Color-coded status indicators with semantic meanings
 
@@ -308,11 +254,11 @@ The application follows modern SaaS design principles with a focus on:
 
 ---
 
-## 🔌 Backend Connectivity
+## Backend Connectivity
 
 ### API Configuration
 
-The frontend connects to a Node.js/Express backend API. Configuration is managed in `lib/api.ts`:
+The frontend connects to a Node.js/Express backend API. Configuration is managed via environment variable:
 
 ```typescript
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5500";
@@ -322,326 +268,73 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5500";
 
 The application uses **JWT (JSON Web Tokens)** for authentication:
 
-1. **Token Storage**:
+- **Token Storage**: `localStorage` for client-side components, cookies for server-side components
+- **Token Transmission**: Sent as `Authorization: Bearer <token>` header
+- **Automatic Injection**: Tokens automatically included in all API requests via `apiRequest` function
 
-   - `localStorage` for client-side components
-   - Cookies for server-side components
-   - Both are synchronized for compatibility
+### Main API Endpoints
 
-2. **Token Transmission**:
+**Authentication**:
+- `POST /api/v1/auth/sign-up` - User registration
+- `POST /api/v1/auth/sign-in` - User login
 
-   - Sent as `Authorization: Bearer <token>` header
-   - Automatically included in all API requests via `apiRequest` function
+**User Management**:
+- `GET /api/v1/user/me` - Get current authenticated user
 
-3. **Token Management**:
-   - Retrieved from `localStorage` in client components
-   - Retrieved from cookies in server components
-   - Automatically cleared on logout
-
-### API Endpoints
-
-#### Authentication
-
-- **POST** `/api/v1/auth/sign-up`
-
-  - **Request Body**: `{ name: string, email: string, password: string }`
-  - **Response**: `{ success: boolean, data: { token: string, user: User } }`
-  - **Usage**: User registration
-
-- **POST** `/api/v1/auth/sign-in`
-  - **Request Body**: `{ email: string, password: string }`
-  - **Response**: `{ success: boolean, data: { token: string, user: User } }`
-  - **Usage**: User login
-
-#### User Management
-
-- **GET** `/api/v1/user/me`
-  - **Headers**: `Authorization: Bearer <token>`
-  - **Response**: `{ success: boolean, data: User }`
-  - **Usage**: Get current authenticated user
-
-#### Subscription Management
-
-- **GET** `/api/v1/subscription/user/:userId`
-
-  - **Headers**: `Authorization: Bearer <token>`
-  - **Response**: `{ success: boolean, data: Subscription[] }`
-  - **Usage**: Get all subscriptions for a user
-
-- **POST** `/api/v1/subscription`
-
-  - **Headers**: `Authorization: Bearer <token>`
-  - **Request Body**:
-    ```typescript
-    {
-      name: string
-      price: number
-      currency: 'Rs' | 'USD'
-      frequency: 'daily' | 'weekly' | 'monthly' | 'yearly'
-      category: string
-      paymentMethod: string
-      startDate: string (ISO format)
-    }
-    ```
-  - **Response**: `{ success: boolean, data: Subscription }`
-  - **Usage**: Create a new subscription
-
-- **PUT** `/api/v1/subscription/:id`
-
-  - **Headers**: `Authorization: Bearer <token>`
-  - **Request Body**: Same as POST
-  - **Response**: `{ success: boolean, data: Subscription }`
-  - **Usage**: Update an existing subscription
-
-- **DELETE** `/api/v1/subscription/:id`
-  - **Headers**: `Authorization: Bearer <token>`
-  - **Response**: `{ success: boolean }`
-  - **Usage**: Delete a subscription
+**Subscription Management**:
+- `GET /api/v1/subscription/user/:userId` - Get all user subscriptions
+- `POST /api/v1/subscription` - Create new subscription
+- `PUT /api/v1/subscription/:id` - Update subscription
+- `DELETE /api/v1/subscription/:id` - Delete subscription
 
 ### Data Normalization
 
 The frontend handles backend data inconsistencies:
-
-- **ID Mapping**: Converts MongoDB `_id` to `id` for consistency
-- **Typo Handling**: Handles `renewaltDate` typo from backend, normalizes to `renewalDate`
-- **Date Formatting**: Converts ISO date strings to user-friendly formats
-- **Error Handling**: Extracts meaningful error messages from backend responses
-
-### Error Handling
-
-The API client (`lib/api.ts`) provides comprehensive error handling:
-
-- **HTTP Status Codes**: Properly handles 400, 401, 404, 500 errors
-- **Error Message Extraction**: Parses JSON error responses
-- **Fallback Messages**: Provides user-friendly error messages
-- **Type Safety**: `ApiException` class for typed error handling
+- ID mapping: Converts MongoDB `_id` to `id` for consistency
+- Typo handling: Normalizes `renewaltDate` to `renewalDate`
+- Date formatting: Converts ISO date strings to user-friendly formats
 
 ---
 
-## 📚 Third-Party Libraries
+## Authentication Flow
 
-### Core Dependencies
+### Registration
 
-#### Next.js (`^14.0.4`)
-
-**Purpose**: React framework for production
-
-**Usage**:
-
-- App Router for file-based routing
-- Server Components for data fetching
-- Client Components for interactivity
-- Built-in optimizations (image, font, script)
-
-**Key Features Used**:
-
-- `next/navigation`: `useRouter`, `usePathname`, `redirect`, `notFound`
-- `next/headers`: `cookies` for server-side token access
-- `next/script`: `Script` component for theme initialization
-- `next/link`: `Link` component for client-side navigation
-
-#### React (`^18.2.0`) & React DOM (`^18.2.0`)
-
-**Purpose**: UI library and DOM rendering
-
-**Usage**:
-
-- Component composition
-- Hooks for state management (`useState`, `useEffect`, `useContext`)
-- Context API for theme management
-- Error boundaries for error handling
-
-**Key Features Used**:
-
-- Server Components (default)
-- Client Components (`'use client'` directive)
-- React Hooks for state and side effects
-- Context API for global state
-
-#### TypeScript (`^5.3.3`)
-
-**Purpose**: Type safety and developer experience
-
-**Usage**:
-
-- Type definitions for all components and functions
-- Interface definitions for data structures
-- Type inference for better DX
-- Compile-time error checking
-
-**Key Features Used**:
-
-- Strict type checking
-- Interface definitions
-- Generic types for API responses
-- Type guards for runtime validation
-
-### Styling Libraries
-
-#### Tailwind CSS (`^3.4.0`)
-
-**Purpose**: Utility-first CSS framework
-
-**Usage**:
-
-- Responsive design utilities
-- Dark mode support (class-based)
-- Custom color palette
-- Utility classes for rapid development
-
-**Configuration** (`tailwind.config.ts`):
-
-```typescript
-{
-  darkMode: 'class', // Class-based dark mode
-  content: ['./app/**/*.{js,ts,jsx,tsx,mdx}', './components/**/*.{js,ts,jsx,tsx,mdx}'],
-  theme: {
-    extend: {
-      colors: {
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
-      },
-    },
-  },
-}
-```
-
-**Key Features Used**:
-
-- Responsive breakpoints (`sm:`, `md:`, `lg:`)
-- Dark mode variants (`dark:`)
-- Utility classes for spacing, colors, typography
-- Custom CSS variables integration
-
-#### PostCSS (`^8.4.32`)
-
-**Purpose**: CSS processing and transformation
-
-**Usage**:
-
-- Processes Tailwind CSS
-- Applies Autoprefixer
-- Optimizes CSS output
-
-#### Autoprefixer (`^10.4.16`)
-
-**Purpose**: Automatic vendor prefixing
-
-**Usage**:
-
-- Adds browser-specific prefixes automatically
-- Ensures cross-browser compatibility
-
-### Utility Libraries
-
-#### clsx (`^2.0.0`)
-
-**Purpose**: Conditional class name utility
-
-**Usage**:
-
-```typescript
-import { clsx } from "clsx";
-
-// Conditional classes
-clsx("base-class", condition && "conditional-class");
-```
-
-**Location**: Used in `lib/utils.ts` via `cn()` function
-
-**Example**:
-
-```typescript
-cn("base-class", isActive && "active-class", className);
-```
-
-#### tailwind-merge (`^2.2.0`)
-
-**Purpose**: Intelligently merge Tailwind CSS classes
-
-**Usage**:
-
-- Prevents class conflicts
-- Merges conflicting Tailwind utilities
-- Used in combination with `clsx` in `cn()` utility
-
-**Example**:
-
-```typescript
-cn("px-4 py-2", "px-6"); // Results in 'py-2 px-6' (px-4 is overridden)
-```
-
-### Development Dependencies
-
-#### @types/node (`^20.10.6`)
-
-**Purpose**: TypeScript definitions for Node.js APIs
-
-**Usage**: Type definitions for Node.js built-in modules used in Next.js
-
-#### @types/react (`^18.2.46`)
-
-**Purpose**: TypeScript definitions for React
-
-**Usage**: Type safety for React components, hooks, and APIs
-
-#### @types/react-dom (`^18.2.18`)
-
-**Purpose**: TypeScript definitions for React DOM
-
-**Usage**: Type safety for React DOM APIs
-
----
-
-## 🔐 Authentication Flow
-
-### Registration Flow
-
-1. User fills out registration form (`/signup`)
+1. User fills out registration form with name, email, and password
 2. Frontend validates password strength and matching
 3. POST request to `/api/v1/auth/sign-up`
 4. Backend returns JWT token
-5. Token stored in:
-   - `localStorage` (for client-side access)
-   - Cookie (for server-side access)
+5. Token stored in `localStorage` and cookie
 6. User redirected to `/dashboard`
 
-### Login Flow
+### Login
 
-1. User enters credentials on `/login`
+1. User enters credentials on login page
 2. POST request to `/api/v1/auth/sign-in`
 3. Backend validates credentials and returns JWT token
 4. Token stored in `localStorage` and cookie
 5. User redirected to `/dashboard`
 
-### Protected Route Flow
+### Protected Routes
 
 1. Server Component calls `requireAuth()`
 2. `requireAuth()` checks for token in cookies
 3. If token exists, validates with backend `/api/v1/user/me`
-4. If valid, returns user data
-5. If invalid/missing, redirects to `/login`
+4. If valid, returns user data; if invalid/missing, redirects to `/login`
 
-### Logout Flow
+### Logout
 
 1. User clicks logout button
-2. Token removed from `localStorage`
-3. Cookie cleared
-4. User redirected to `/login`
+2. Token removed from `localStorage` and cookie cleared
+3. User redirected to `/login`
 
 ---
 
-## 🏗 Component Architecture
+## Component Architecture
 
 ### Server Components
 
-Server Components are used for:
-
-- Data fetching (dashboard, subscriptions list)
-- Authentication checks
-- Initial page rendering
-
-**Examples**:
+Used for data fetching, authentication checks, and initial page rendering:
 
 - `app/dashboard/page.tsx`
 - `app/subscriptions/page.tsx`
@@ -649,18 +342,13 @@ Server Components are used for:
 
 ### Client Components
 
-Client Components are used for:
-
-- User interactions (forms, buttons)
-- State management
-- Browser APIs (localStorage, window)
-
-**Examples**:
+Used for user interactions, state management, and browser APIs:
 
 - `components/add-subscription-form.tsx`
 - `components/edit-subscription-form.tsx`
 - `components/navigation.tsx`
 - `app/login/page.tsx`
+- `app/signup/page.tsx`
 
 ### Reusable UI Components
 
@@ -675,21 +363,21 @@ Located in `components/ui/`:
 
 ---
 
-## 🌐 API Integration
+## API Integration
 
-### API Client (`lib/api.ts`)
+### API Client
 
-The API client provides a unified interface for backend communication:
+The API client (`lib/api.ts`) provides a unified interface:
 
 ```typescript
 // GET request
 const data = await api.get<ResponseType>("/endpoint");
 
 // POST request
-const data = await api.post<ResponseType>("/endpoint", { ...payload });
+const data = await api.post<ResponseType>("/endpoint", payload);
 
 // PUT request
-const data = await api.put<ResponseType>("/endpoint", { ...payload });
+const data = await api.put<ResponseType>("/endpoint", payload);
 
 // DELETE request
 const data = await api.delete<ResponseType>("/endpoint");
@@ -697,10 +385,10 @@ const data = await api.delete<ResponseType>("/endpoint");
 
 ### Features
 
-- **Automatic Token Injection**: Adds `Authorization` header if token exists
-- **Error Handling**: Extracts meaningful error messages
-- **Type Safety**: Generic types for response data
-- **Content-Type**: Automatically sets JSON headers
+- Automatic token injection in Authorization header
+- Error handling with meaningful error messages
+- Type safety with generic types for response data
+- Automatic JSON content-type headers
 
 ### Error Handling
 
@@ -717,7 +405,7 @@ try {
 
 ---
 
-## 📱 Responsive Design
+## Responsive Design
 
 ### Mobile-First Approach
 
@@ -732,24 +420,22 @@ All components are designed mobile-first, then enhanced for larger screens:
 - **Grid Layouts**: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
 - **Typography**: `text-2xl sm:text-3xl`
 - **Spacing**: `p-4 sm:p-6 lg:p-8`
-- **Navigation**: Collapsible on mobile, full menu on desktop
 - **Forms**: Stacked inputs on mobile, side-by-side on desktop
 
 ---
 
-## ⚠️ Error Handling
+## Error Handling
 
 ### Error Boundaries
 
 React Error Boundaries catch component errors:
-
-- **Global Error Boundary**: Catches errors in page components
-- **Component-Level Boundaries**: Specific error handling per section
+- Global error boundary catches errors in page components
+- Component-level boundaries for specific error handling
 
 ### Error Messages
 
-- **API Errors**: Extracted from backend responses
-- **Validation Errors**: Displayed inline in forms
+- **API Errors**: Extracted from backend responses with user-friendly messages
+- **Validation Errors**: Displayed inline in forms with proper ARIA attributes
 - **Network Errors**: User-friendly fallback messages
 - **404 Errors**: Custom not-found page
 
@@ -761,7 +447,7 @@ React Error Boundaries catch component errors:
 
 ---
 
-## 💻 Development Guidelines
+## Development Guidelines
 
 ### Code Style
 
@@ -774,8 +460,8 @@ React Error Boundaries catch component errors:
 
 1. **Server vs Client Components**: Use Server Components by default, Client Components only when needed
 2. **Data Fetching**: Fetch data in Server Components when possible
-3. **Error Handling**: Always handle errors gracefully
-4. **Accessibility**: Include ARIA labels and keyboard navigation
+3. **Error Handling**: Always handle errors gracefully with proper user feedback
+4. **Accessibility**: Include ARIA labels, keyboard navigation, and proper semantic HTML
 5. **Performance**: Use Next.js optimizations (Image, Link, Script)
 
 ### Environment Variables
@@ -788,7 +474,7 @@ NEXT_PUBLIC_API_URL=http://localhost:5500
 
 ---
 
-## 🚀 Deployment
+## Deployment
 
 ### Build Process
 
@@ -806,37 +492,36 @@ npm start
 
 ### Environment Configuration
 
-Set `NEXT_PUBLIC_API_URL` to your production backend URL.
+Set `NEXT_PUBLIC_API_URL` to your production backend URL in your deployment platform's environment variables.
 
 ---
 
-## 📝 License
+## License
 
 This project is part of a subscription management system. All rights reserved.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 When contributing to this project:
 
-1. Follow TypeScript best practices
-2. Maintain component structure
-3. Add proper error handling
-4. Ensure responsive design
-5. Test on multiple devices
-6. Update documentation
+1. Follow TypeScript best practices and maintain type safety
+2. Maintain consistent component structure and naming conventions
+3. Add proper error handling and user feedback
+4. Ensure responsive design works across all breakpoints
+5. Test on multiple devices and browsers
+6. Update documentation for any significant changes
 
 ---
 
-## 📞 Support
+## Support
 
-For issues or questions, please refer to the project documentation or contact the developer
+For issues or questions, please refer to the project documentation or contact:
 
-Email: nethminaappdevelopment1@gmail.com
-
-LinkedIn: http://www.linkedin.com/in/neth-band
+- **Email**: nethminaappdevelopment1@gmail.com
+- **LinkedIn**: [http://www.linkedin.com/in/neth-band](http://www.linkedin.com/in/neth-band)
 
 ---
 
-**Built with ❤️ using Next.js, React, and TypeScript**
+**Built with Next.js, React, and TypeScript**
